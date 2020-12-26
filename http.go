@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func curl(url, method string, data interface{}, headerMap map[string]string, act *interface{}) (*interface{}, error) {
+func Curl(url, method string, data interface{}, headerMap map[string]string, act *interface{}) (*interface{}, error) {
 
 	//序列化数据 对象或者map
 	jsonStr, _ := json.Marshal(data)
