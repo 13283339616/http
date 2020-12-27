@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func Curl(url, method string, data interface{}, headerMap map[string]string, act *interface{}) (*interface{}, error) {
+func Curl(url, method string, data interface{}, headerMap map[string]string, act interface{}) (interface{}, error) {
 
 	//序列化数据 对象或者map
 	jsonStr, _ := json.Marshal(data)
@@ -36,7 +36,7 @@ func Curl(url, method string, data interface{}, headerMap map[string]string, act
 	result, _ := ioutil.ReadAll(resp.Body)
 	content := string(result)
 	//封装数据
-	if err := json.Unmarshal([]byte(content), act); err == nil {
+	if err := json.Unmarshal([]byte(content), &act); err == nil {
 		return act, nil
 	} else {
 		return nil, err
