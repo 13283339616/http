@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -35,8 +36,9 @@ func Curl(url, method string, data interface{}, headerMap map[string]string, act
 	}
 	result, _ := ioutil.ReadAll(resp.Body)
 	content := string(result)
-	//封装数据
-	if err := json.Unmarshal([]byte(content), &act); err == nil {
+
+	err = json.NewDecoder(strings.NewReader(content)).Decode(&act)
+	if err != nil {
 		return act, nil
 	} else {
 		return nil, err
@@ -72,7 +74,8 @@ func CurlRes(url, method string, data interface{}, headerMap map[string]string, 
 	result, _ := ioutil.ReadAll(resp.Body)
 	content := string(result)
 	//封装数据
-	if err := json.Unmarshal([]byte(content), &act); err == nil {
+	err = json.NewDecoder(strings.NewReader(content)).Decode(&act)
+	if err != nil {
 		return act, resp, nil
 	} else {
 		return nil, nil, err
