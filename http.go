@@ -1,4 +1,4 @@
-package http
+package main
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func Curl(url, method string, data interface{}, headerMap map[string]string, act interface{}) (interface{}, error) {
+func Curl(url, method string, data interface{}, headerMap map[string]string, act interface{}) (string, error) {
 
 	//序列化数据 对象或者map
 	jsonStr, _ := json.Marshal(data)
@@ -20,7 +20,7 @@ func Curl(url, method string, data interface{}, headerMap map[string]string, act
 		req.Header.Add(k, v)
 	}
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	defer req.Body.Close()
 
@@ -32,20 +32,18 @@ func Curl(url, method string, data interface{}, headerMap map[string]string, act
 	resp, err := client.Do(req)
 	defer resp.Body.Close()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	result, _ := ioutil.ReadAll(resp.Body)
 	content := string(result)
-
-	err = json.NewDecoder(strings.NewReader(content)).Decode(&act)
 	if err != nil {
-		return act, nil
+		return "", err
 	} else {
-		return nil, err
+		return content, nil
 	}
 }
 
-func CurlRes(url, method string, data interface{}, headerMap map[string]string, act interface{}) (interface{}, *http.Response, error) {
+func CurlRes(url, method string, data interface{}, headerMap map[string]string, act interface{}) (string, *http.Response, error) {
 
 	//序列化数据 对象或者map
 	jsonStr, _ := json.Marshal(data)
@@ -56,7 +54,7 @@ func CurlRes(url, method string, data interface{}, headerMap map[string]string, 
 		req.Header.Add(k, v)
 	}
 	if err != nil {
-		return nil, nil, err
+		return "", nil, err
 	}
 	defer req.Body.Close()
 
@@ -69,15 +67,15 @@ func CurlRes(url, method string, data interface{}, headerMap map[string]string, 
 
 	defer resp.Body.Close()
 	if err != nil {
-		return nil, nil, err
+		return "", nil, err
 	}
 	result, _ := ioutil.ReadAll(resp.Body)
 	content := string(result)
 	//封装数据
-	err = json.NewDecoder(strings.NewReader(content)).Decode(&act)
+	err = json.NewDecoder(strings.NewReader(content)).Decode(act)
 	if err != nil {
-		return act, resp, nil
+		return "", nil, err
 	} else {
-		return nil, nil, err
+		return content, resp, nil
 	}
 }
