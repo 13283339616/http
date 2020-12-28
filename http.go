@@ -5,12 +5,11 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"time"
 )
 
 //调取curl
-func Curl(url, method string, data interface{}, headerMap map[string]string, act interface{}) (string, error) {
+func Curl(url, method string, data interface{}, headerMap map[string]string) (string, error) {
 
 	//序列化数据 对象或者map
 	jsonStr, _ := json.Marshal(data)
@@ -37,11 +36,7 @@ func Curl(url, method string, data interface{}, headerMap map[string]string, act
 	}
 	result, _ := ioutil.ReadAll(resp.Body)
 	content := string(result)
-	if err != nil {
-		return "", err
-	} else {
-		return content, nil
-	}
+	return content, nil
 }
 
 func CurlRes(url, method string, data interface{}, headerMap map[string]string, act interface{}) (string, *http.Response, error) {
@@ -72,11 +67,5 @@ func CurlRes(url, method string, data interface{}, headerMap map[string]string, 
 	}
 	result, _ := ioutil.ReadAll(resp.Body)
 	content := string(result)
-	//封装数据
-	err = json.NewDecoder(strings.NewReader(content)).Decode(act)
-	if err != nil {
-		return "", nil, err
-	} else {
-		return content, resp, nil
-	}
+	return content, resp, nil
 }
