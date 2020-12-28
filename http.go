@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+//调取curl
 func Curl(url, method string, data interface{}, headerMap map[string]string, act interface{}) (string, error) {
 
 	//序列化数据 对象或者map
